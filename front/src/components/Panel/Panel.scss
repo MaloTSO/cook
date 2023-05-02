@@ -1,0 +1,18 @@
+@use 'styles/colors' as colors;
+@use 'styles/ui' as ui;
+
+.panel-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: ui.$margin;
+  background-color: colors.$secondary;
+  border-radius: ui.$radius;
+  padding: ui.$padding;
+  box-sizing: border-box;
+  box-shadow: 0 0 10px 1px black;
+}
+
+.no-shadows {
+  box-shadow: 0 0 10px 1px transparent;
+}

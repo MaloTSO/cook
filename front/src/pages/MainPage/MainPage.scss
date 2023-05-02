@@ -1,0 +1,10 @@
+@use 'styles/ui' as ui;
+
+#main-page-container {
+  height: 100%;
+  display: flex;
+  flex-direction: row;
+  gap: ui.$margin;
+  padding: ui.$padding;
+  box-sizing: border-box;
+}

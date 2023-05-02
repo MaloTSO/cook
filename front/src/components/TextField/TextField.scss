@@ -1,0 +1,33 @@
+@use 'styles/colors' as colors;
+@use 'styles/ui' as ui;
+
+.textfield-container {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  cursor: pointer;
+
+  #label {
+    font-weight: bold;
+    user-select: none;
+    font-size: 16px;
+  }
+
+  .input {
+    all: unset;
+    background-color: white;
+    border-radius: ui.$radius;
+    padding: 0 5px;
+    color: colors.$textBis;
+    border: 2px solid transparent;
+    box-sizing: border-box;
+    transition: all 0.3s;
+  }
+}
+
+.focused {.input {border-color: colors.$primary;}}
+
+.textfield-disabled {
+  color: grey;
+  cursor: not-allowed;
+}

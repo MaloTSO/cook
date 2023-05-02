@@ -1,0 +1,39 @@
+@use 'styles/ui' as ui;
+
+.post-container {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: space-between;
+
+  #post-top {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    font-weight: bold;
+    font-size: 14px;
+
+    #post-author {font-size: 20px;}
+  }
+
+  #post-message {font-size: 20px;}
+
+  #post-bottom {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    gap: calc(ui.$margin * 3);
+    justify-content: flex-end;
+
+    .bottom-part {
+      display: flex;
+      align-items: center;
+      gap: ui.$margin;
+      font-weight: bold;
+      font-size: 14px;
+    }
+
+    .liked {background-color: red;}
+  }
+}

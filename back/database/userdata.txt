@@ -1,0 +1,13 @@
+{
+    "_id": "643ab2fe73217f9f6dd784ed",
+    "pseudo": "yes",
+    "email": "yes@gmail.com",
+    "picture": "./uploads/profil/random-user.png",
+    "followers": [],
+    "following": [],
+    "likes": [],
+    "createdAt": "2023-04-15T14:21:50.739Z",
+    "updatedAt": "2023-04-18T10:09:18.740Z",
+    "__v": 0,
+    "bio": "coucou les amis"
+}

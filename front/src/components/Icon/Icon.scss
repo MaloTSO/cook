@@ -1,0 +1,9 @@
+.icon-container {
+  height: 30px;
+  width: 30px;
+  filter: invert(100%) sepia(94%) saturate(24%)
+    hue-rotate(66deg) brightness(107%) contrast(106%);
+  cursor: pointer;
+}
+
+.disabled {cursor: not-allowed;}

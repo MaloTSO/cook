@@ -1,0 +1,14 @@
+@use 'styles/colors' as colors;
+@use 'styles/ui' as ui;
+
+.toolbar-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.navlink {
+  text-decoration: none;
+  color: colors.$text
+}
+
+.here {font-weight: bold;}

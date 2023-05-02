@@ -1,0 +1,11 @@
+@use 'styles/ui' as ui;
+
+#home-page-container {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: ui.$margin;
+  padding-right: ui.$padding;
+  box-sizing: border-box;
+  overflow-y: scroll;
+}

@@ -1,0 +1,8 @@
+{
+  "compilerOptions": {"baseUrl": "src"},
+  "components": ["src/components"],
+  "pages": ["src/pages"],
+  "styles": ["src/styles"],
+  "assets": ["src/assets"],
+  "icons": ["src/assets/icons"]
+}

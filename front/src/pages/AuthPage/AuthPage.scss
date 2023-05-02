@@ -1,0 +1,14 @@
+@use 'styles/ui' as ui;
+
+#auth-page-container {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  #error-text {
+    font-weight: bold;
+    color: red;
+    font-size: 20px;
+  }
+}

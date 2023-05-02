@@ -1,0 +1,2 @@
+Services développés: Création d'utilisateur, publication de message, likes de message (par contre une fois liké le like ne peut pour le moment pas être enlevé)
+Services prévus: Rajout de followers, Lists de messages les plus likés

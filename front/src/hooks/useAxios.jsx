@@ -15,7 +15,7 @@ const useAxios = (method, url, body) => {
 
     axios
       [method](url, body)
-      .then((res) => {setData(res.data)})
+      .then((res) => {setData(res?.data)})
       .catch((err) => {setError(err?.response?.data?.errors)})
       .finally(() => {setIsLoading(false)})
   }

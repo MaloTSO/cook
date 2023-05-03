@@ -19,7 +19,7 @@ const PostPage = () => {
 
   return (
     <div id='post-page-container'>
-      {post && <Post isComment data={post} />}
+      {post && <Post isMain data={post} />}
       {post?.comment?.map((post, i) => (<Post key={i} isComment data={post} />))}
     </div>
   )

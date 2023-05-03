@@ -18,7 +18,10 @@
     padding: 0 ui.$padding;
     box-sizing: border-box;
 
-    #post-author {font-weight: bold;}
+    #post-author {
+      font-weight: bold;
+      cursor: pointer;
+    }
   }
 
   #post-bottom {

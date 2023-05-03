@@ -1,13 +1,10 @@
 import './ProfilPage.scss'
-import Button from 'components/Button/Button'
+import ProfilPanel from 'components/ProfilPanel/ProfilPanel'
 
-const ProfilPage = () => {
-
-  return (
-    <div id='profil-page-container'>
-      ProfilPage
-    </div>
-  )
-}
+const ProfilPage = () => (
+  <div id='profil-page-container'>
+    <ProfilPanel />
+  </div>
+)
 
 export default ProfilPage

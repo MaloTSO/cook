@@ -1,0 +1,9 @@
+.profil-panel-container {
+  flex-direction: row;
+  justify-content: space-between;
+
+  #pseudo {
+    font-size: 45px;
+    font-weight: bold;
+  }
+}

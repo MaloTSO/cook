@@ -16,12 +16,23 @@ const Toolbar = () => {
       >
         Accueil
       </NavLink>
-      <NavLink
-        to='/profil'
-        className={({isActive}) => 'navlink' + (isActive ? ' here' : '')}
-      >
-        Profil
-      </NavLink>
+      {
+        userId &&
+        <>
+          <NavLink
+            to={`/profil/${userId}`}
+            className={({isActive}) => 'navlink' + (isActive ? ' here' : '')}
+          >
+            Mon profil
+          </NavLink>
+          <NavLink
+            to='/create'
+            className={({isActive}) => 'navlink' + (isActive ? ' here' : '')}
+          >
+            Poster
+          </NavLink>
+        </>
+      }
       <NavLink
         to={userId ? '/home' : '/auth'}
         onClick={userId ? handleDisconnect : null}

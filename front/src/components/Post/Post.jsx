@@ -13,7 +13,7 @@ import useAxios from 'hooks/useAxios'
 import getUserByPosterId from 'API/getUserByPosterId'
 import patchLikeUnlike from 'API/patchLikeUnlike'
 
-const Post = ({data, isComment}) => {
+const Post = ({data, isComment, isMain}) => {
 
   const {userId} = useAuth()
 
@@ -41,34 +41,44 @@ const Post = ({data, isComment}) => {
     return `${time} - ${day}`
   }
 
-  const handleClickComment = () => {navigate('/' + data?._id, {replace: true})}
+  const handleClickComment = () => {navigate('/post/' + data?._id, {replace: true})}
+
+  const handleGoToProfile = () => {navigate('/profil/' + data?.posterId)}
 
   return (
     <Panel noShadows className='post-container'>
       <div id='post-top'>
-        <span id='post-author'>{user?.pseudo}</span>
+        <span
+          id='post-author'
+          onClick={handleGoToProfile}
+        >
+          {user?.pseudo}
+        </span>
         <span id='post-message'>{data?.text}</span>
       </div>
       <Separator />
       <div id='post-bottom'>
         <span id='post-date'>{parseDate(data?.date)}</span>
-        <div id='post-parts'>
-          <div className='bottom-part'>
-            <Icon
-              disabled={!userId}
-              src={isLiked ? fullLikeSvg : likeSvg}
-              onClick={likeUnlikeCall}
-            />
-            <span>{data?.likers?.length}</span>
-          </div>
-          {
-            !isComment &&
+        {
+          !isComment &&
+          <div id='post-parts'>
             <div className='bottom-part'>
-              <Icon src={commentSvg} onClick={handleClickComment} />
-              <span>{data?.comment?.length}</span>
+              <Icon
+                disabled={!userId}
+                src={isLiked ? fullLikeSvg : likeSvg}
+                onClick={likeUnlikeCall}
+              />
+              <span>{data?.likers?.length}</span>
             </div>
-          }
-        </div>
+            {
+              !isMain &&
+              <div className='bottom-part'>
+                <Icon src={commentSvg} onClick={handleClickComment} />
+                <span>{data?.comment?.length}</span>
+              </div>
+            }
+          </div>
+        }
       </div>
     </Panel>
   )

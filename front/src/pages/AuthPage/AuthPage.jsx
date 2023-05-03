@@ -1,56 +1,43 @@
-import {useState, useEffect, useContext} from 'react'
+import {useEffect, useState} from 'react'
 import {useNavigate} from 'react-router-dom'
-import axios from 'axios'
 
-import {AppContext} from 'components/Router/Router'
+import useAuth from 'hooks/useAuth'
 import TextField from 'components/TextField/TextField'
 import Button from 'components/Button/Button'
 import Panel from 'components/Panel/Panel'
 import './AuthPage.scss'
+import postLogin from 'API/postLogin'
+import useAxios from 'hooks/useAxios'
 
 const AuthPage = () => {
 
-  const {userId, setUserId} = useContext(AppContext)
+  const {setUserId} = useAuth()
 
   const navigate = useNavigate()
 
   const [pseudo, setPseudo] = useState('')
   const [email, setEmail] = useState('malo@gmail.com')
   const [password, setPassword] = useState('123456')
-  const [error, setError] = useState()
   const [isLogin, setIsLogin] = useState(true)
+  const [displayedError, setDisplayedError] = useState()
+
+  const {loading, data, error, call: loginCall} = useAxios(
+    postLogin.method,
+    `${postLogin.url}${(isLogin ? 'login' : 'register')}`,
+    {pseudo, email, password}
+  )
+
+  useEffect(() => {if (data) {setUserId(data)}}, [data])
 
   useEffect(() => {
-    console.log('userId:', userId)
-    if (!userId) {
-      if (localStorage.getItem('userId')) {
-        setUserId(localStorage.getItem('userId'))
-      }
-    } else if (userId) {
-      console.log('HERE')
-      localStorage.setItem('userId', userId)
-      handleNavigate()
+    if (error) {
+      setDisplayedError((
+        error?.pseudo ||
+        error?.email ||
+        error?.password
+      ).toUpperCase())
     }
-  }, [userId])
-
-  const handleConfirm = () => {
-    setError(undefined)
-
-    axios.post(
-      `api/user/${(isLogin ? 'login' : 'register')}`,
-      {pseudo, email, password}
-    )
-      .then((res) => {setUserId(res?.data)})
-      .catch((err) => {
-        setError(
-          err?.response?.data?.errors?.pseudo ||
-          err?.response?.data?.errors?.email ||
-          err?.response?.data?.errors?.password
-        )
-      })
-  }
-
-  const handleNavigate = () => {navigate('/home')}
+  }, [error])
 
   return (
     <div id='auth-page-container'>
@@ -76,7 +63,7 @@ const AuthPage = () => {
           // prop qui cache la contenu du field
           isSecure
         />
-        <span id='error-text'>{error?.toUpperCase()}</span>
+        <span id='error-text'>{displayedError}</span>
         <Button
           label={isLogin ? 'Pas de compte ?' : 'Déjà un compte ?'}
           // inverse la boolean 'isLogin'
@@ -91,12 +78,9 @@ const AuthPage = () => {
           }
           // change le label si le mec se login ou register
           label={isLogin ? 'Connexion' : 'Inscription'}
-          onClick={handleConfirm}
+          onClick={loginCall}
         />
-        <Button
-          label='Ne pas se connecter'
-          onClick={handleNavigate}
-        />
+        <Button label='Ne pas se connecter' onClick={() => navigate('/home')} />
       </Panel>
     </div>
   )

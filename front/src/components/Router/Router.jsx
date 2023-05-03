@@ -1,5 +1,4 @@
 import {BrowserRouter, Routes, Route, Navigate} from 'react-router-dom'
-import axios from 'axios'
 import {createContext, useState} from 'react'
 
 import AuthPage from 'pages/AuthPage/AuthPage'
@@ -8,9 +7,6 @@ import MainPage from 'pages/MainPage/MainPage'
 import ProfilPage from 'pages/ProfilPage/ProfilPage'
 import PostPage from 'pages/PostPage/PostPage'
 import './Router.scss'
-
-axios.defaults.baseURL = process.env.REACT_APP_API_URL
-axios.defaults.headers.common['Access-Control-Allow-Origin'] = '*'
 
 export const AppContext = createContext(null)
 
@@ -30,7 +26,7 @@ const Router = () => {
               <Route path='/home' element={<HomePage />} />
               <Route path='/profil' element={<ProfilPage />} />
             </Route>
-            <Route path='*' element={<Navigate replace to='/auth' />} />
+            {/* <Route path='*' element={<Navigate replace to='/auth' />} /> */}
           </Routes>
         </AppContext.Provider>
       </BrowserRouter>

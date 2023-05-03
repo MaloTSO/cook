@@ -1,16 +1,19 @@
-- allez sur la page d'un post et afficher les commentaires
+URGENT
 - poster un post
-- photo de profil
-- liker un post
+- page de profil
+- follow / unfollow (espace "pour moi")
+- allez sur la page d'un post et afficher les commentaires
 - modifier ses informations d'utilisateur / supprimer son compte
 - delete un post
-- modifier un post(et indiquer que le post est modifié)
-- follow / unfollow
 - rechercher les post d'utilisateur specifique avec son pseudo
-- faire un hook pour factoriser le check de userId
+
+SECONDAIRE
+- photo de profil
+- bloquer un user
+- modifier un post (et indiquer que le post est modifié)
 
 STYLE
-
+- finir de se battre avec les îcones
 - spinner home
 - fondu sur le like
 - ombre des tweets coupées

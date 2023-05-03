@@ -6,34 +6,49 @@
   flex-direction: column;
   align-items: flex-start;
   justify-content: space-between;
+  padding: ui.$padding 0;
+  box-sizing: border-box;
 
   #post-top {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    font-weight: bold;
-    font-size: 14px;
+    gap: ui.$margin;
+    font-size: 20px;
+    padding: 0 ui.$padding;
+    box-sizing: border-box;
 
-    #post-author {font-size: 20px;}
+    #post-author {font-weight: bold;}
   }
-
-  #post-message {font-size: 20px;}
 
   #post-bottom {
     width: 100%;
     display: flex;
     flex-direction: row;
-    gap: calc(ui.$margin * 3);
-    justify-content: flex-end;
+    align-items: flex-end;
+    gap: ui.$margin;
+    justify-content: space-between;
+    padding: 0 ui.$padding;
+    box-sizing: border-box;
 
-    .bottom-part {
-      display: flex;
-      align-items: center;
-      gap: ui.$margin;
-      font-weight: bold;
-      font-size: 14px;
+    #post-date {
+      font-weight: normal;
+      font-size: 16px;
     }
 
-    .liked {background-color: red;}
+    #post-parts {
+      display: flex;
+      flex-direction: row;
+      gap: calc(ui.$margin * 2);
+
+      .bottom-part {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        gap: ui.$margin;
+        font-weight: bold;
+        font-size: 14px;
+      }
+    }
   }
 }

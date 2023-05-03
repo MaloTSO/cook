@@ -1,41 +1,44 @@
-import {useState, useEffect, useContext} from 'react'
-import axios from 'axios'
 import {useNavigate} from 'react-router-dom'
+import {useEffect} from 'react'
 
-import {AppContext} from 'components/Router/Router'
 import './Post.scss'
 import commentSvg from 'assets/icons/comment.svg'
 import likeSvg from 'assets/icons/like.svg'
+import fullLikeSvg from 'assets/icons/fullLike.svg'
 import Panel from 'components/Panel/Panel'
 import Icon from 'components/Icon/Icon'
+import Separator from 'components/Separator/Separator'
+import useAuth from 'hooks/useAuth'
+import useAxios from 'hooks/useAxios'
+import getUserByPosterId from 'API/getUserByPosterId'
+import patchLikeUnlike from 'API/patchLikeUnlike'
 
 const Post = ({data, isComment}) => {
 
-  const {userId} = useContext(AppContext)
+  const {userId} = useAuth()
 
   const navigate = useNavigate()
 
-  const [user, setUser] = useState()
-  const [isLiked, setIsLiked] = useState(false)
+  const isLiked = data?.likers?.includes(userId)
 
-  useEffect(() => {
-    setIsLiked(data?.likers?.includes(userId))
+  const {loading: getUserLoading, data: user, call: getUserCall} = useAxios(
+    getUserByPosterId.method,
+    getUserByPosterId.url + data.posterId
+  )
 
-    axios.get(`api/user/${data.posterId}`)
-      .then((res) => {setUser(res?.data)})
-      .catch(() => {console.log('error sur le get d\'un id')})
-  }, [])
+  const {call: likeUnlikeCall} = useAxios(
+    patchLikeUnlike.method,
+    `${patchLikeUnlike.url}${(isLiked ? 'unlike' : 'like')}/${data?._id}`,
+    {id: userId}
+  )
+
+  useEffect(() => {getUserCall()}, [])
 
   const parseDate = (date) => {
-    return date?.substring(0, date?.indexOf('T'))?.replaceAll('-', '/')?.split('/').reverse().join('/')
-  }
+    let day = date.split('T')[0].split('-').reverse().join('-').replaceAll('-', '/')
+    let time = date.split('T')[1].substring(0, 5)
 
-  const handleLike = () => {
-    axios.patch(
-      `api/post/${(isLiked ? 'unlike' : 'like')}/${data?._id}`,
-      {id: userId}
-    )
-      .catch((err) => console.log('error liking/unliking a post:', err))
+    return `${time} - ${day}`
   }
 
   const handleClickComment = () => {navigate('/' + data?._id, {replace: true})}
@@ -44,21 +47,28 @@ const Post = ({data, isComment}) => {
     <Panel noShadows className='post-container'>
       <div id='post-top'>
         <span id='post-author'>{user?.pseudo}</span>
-        <span>{parseDate(data?.date)}</span>
+        <span id='post-message'>{data?.text}</span>
       </div>
-      <span id='post-message'>{data?.text}</span>
+      <Separator />
       <div id='post-bottom'>
-        <div className={'bottom-part' + (isLiked ? ' liked' : '')}>
-          <Icon disabled={!userId} src={likeSvg} onClick={handleLike} />
-          <span>{data?.likers?.length}</span>
-        </div>
-        {
-          !isComment &&
+        <span id='post-date'>{parseDate(data?.date)}</span>
+        <div id='post-parts'>
           <div className='bottom-part'>
-            <Icon src={commentSvg} onClick={handleClickComment} />
-            <span>{data?.comment?.length}</span>
+            <Icon
+              disabled={!userId}
+              src={isLiked ? fullLikeSvg : likeSvg}
+              onClick={likeUnlikeCall}
+            />
+            <span>{data?.likers?.length}</span>
           </div>
-        }
+          {
+            !isComment &&
+            <div className='bottom-part'>
+              <Icon src={commentSvg} onClick={handleClickComment} />
+              <span>{data?.comment?.length}</span>
+            </div>
+          }
+        </div>
       </div>
     </Panel>
   )

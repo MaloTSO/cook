@@ -1,18 +1,12 @@
 import {NavLink} from 'react-router-dom'
-import {useEffect, useContext} from 'react'
 
-import {AppContext} from 'components/Router/Router'
 import './Toolbar.scss'
-import Button from 'components/Button/Button'
 import Panel from 'components/Panel/Panel'
+import useAuth from 'hooks/useAuth'
 
 const Toolbar = () => {
 
-  const {userId, setUserId} = useContext(AppContext)
-
-  useEffect(() => {if (!userId) {localStorage.removeItem('userId')}}, [userId])
-
-  const handleDisconnect = () => {setUserId(undefined)}
+  const {userId, handleDisconnect} = useAuth()
 
   return (
     <Panel className='toolbar-container'>
@@ -28,13 +22,13 @@ const Toolbar = () => {
       >
         Profil
       </NavLink>
-      {
-        userId
-        ?
-        <Button label='Déconnexion' onClick={handleDisconnect} />
-        :
-        <NavLink to='/auth' className='navlink'>Connexion</NavLink>
-      }
+      <NavLink
+        to={userId ? '/home' : '/auth'}
+        onClick={userId ? handleDisconnect : null}
+        className='navlink'
+      >
+        {userId ? 'Déconnexion' : 'Connexion'}
+      </NavLink>
     </Panel>
   )
 }

@@ -4,5 +4,7 @@
   "pages": ["src/pages"],
   "styles": ["src/styles"],
   "assets": ["src/assets"],
-  "icons": ["src/assets/icons"]
+  "icons": ["src/assets/icons"],
+  "hooks": ["src/hooks"],
+  "API": ["src/API"]
 }

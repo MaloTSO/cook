@@ -26,7 +26,7 @@ const Router = () => {
               <Route path='/home' element={<HomePage />} />
               <Route path='/profil' element={<ProfilPage />} />
             </Route>
-            {/* <Route path='*' element={<Navigate replace to='/auth' />} /> */}
+            <Route path='*' element={<Navigate replace to='/auth' />} />
           </Routes>
         </AppContext.Provider>
       </BrowserRouter>

@@ -3,6 +3,7 @@ import {useParams} from 'react-router-dom'
 
 import './PostPage.scss'
 import Post from 'components/Post/Post'
+import Spinner from 'components/Spinner/Spinner'
 import getPostById from 'API/getPostById'
 import useAxios from 'hooks/useAxios'
 
@@ -19,8 +20,16 @@ const PostPage = () => {
 
   return (
     <div id='post-page-container'>
-      {post && <Post isMain data={post} />}
-      {post?.comment?.map((post, i) => (<Post key={i} isComment data={post} />))}
+      {
+        (loading || !post)
+        ?
+        <Spinner size='large' />
+        :
+        <>
+          <Post isMain data={post} />
+          {post?.comment?.map((post, i) => (<Post key={i} isComment data={post} />))}
+        </>
+      }
     </div>
   )
 }

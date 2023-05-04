@@ -5,6 +5,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  background-image: url('../../assets/images/background.jpg');
+  background-size: cover;
 
   #error-text {
     font-weight: bold;

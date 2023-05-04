@@ -8,3 +8,12 @@
   padding-right: ui.$padding;
   box-sizing: border-box;
 }
+
+#profil-page-posts {
+  display: flex;
+  flex-direction: column;
+  gap: ui.$margin;
+  padding-right: ui.$margin;
+  box-sizing: border-box;
+  overflow-y: scroll;
+}

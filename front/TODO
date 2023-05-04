@@ -1,21 +1,18 @@
 URGENT
 
-- afficher les posts d'un mec sur sa page profil
+- poster un commentaire
 - follow / unfollow (espace "pour moi")
-- allez sur la page d'un post et afficher les commentaires
-- modifier ses informations d'utilisateur / supprimer son compte
 - delete un post
 - rechercher les post d'utilisateur specifique avec son pseudo
 
 SECONDAIRE
 
+- modifier ses informations d'utilisateur / supprimer son compte
 - photo de profil
 - bloquer un user
 - modifier un post (et indiquer que le post est modifié)
 
 STYLE
 
-- finir de se battre avec les îcones
-- spinner home
-- fondu sur le like
+- composant pour upload image
 - ombre des tweets coupées

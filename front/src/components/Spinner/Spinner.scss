@@ -1,0 +1,25 @@
+@use 'styles/colors' as colors;
+
+.spinner-container {
+  height: 40px;
+  width: 40px;
+  border: 2px solid transparent;
+  border-radius: 50%;
+  animation: loading 1s ease infinite;
+  border-top-color: colors.$text;
+  border-bottom-color: colors.$text;
+
+  @keyframes loading {to {transform: rotate(1turn);}}
+}
+
+.spinner-container.medium {
+  height: 60px;
+  width: 60px;
+  border-width: 5px;
+}
+
+.spinner-container.large {
+  height: 120px;
+  width: 120px;
+  border-width: 8px;
+}

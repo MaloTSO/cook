@@ -2,6 +2,7 @@ import {useEffect} from 'react'
 
 import './HomePage.scss'
 import Post from 'components/Post/Post'
+import Spinner from 'components/Spinner/Spinner'
 import useAxios from 'hooks/useAxios'
 import getPosts from 'API/getPosts'
 
@@ -16,7 +17,13 @@ const HomePage = () => {
 
   return (
     <div id='home-page-container'>
-      {posts?.reverse()?.map((post, i) => (<Post key={i} data={post} />))}
+      {
+        loading
+        ?
+        <Spinner size='large' />
+        :
+        posts?.reverse()?.map((post, i) => (<Post key={i} data={post} />))
+      }
     </div>
   )
 }

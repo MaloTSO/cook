@@ -6,6 +6,7 @@ const ObjectID = require('mongoose').Types.ObjectId;
 module.exports.readAllPosts = async (req, res) =>{
 	const AllPost = await PostModel.find().sort({createdAt : -1});
 
+	/**Affichage de tous les posts, utile pour la page d'accueil */
 	if(AllPost == null){
 		return res.status(400).send('Probleme');
 	}
@@ -14,13 +15,30 @@ module.exports.readAllPosts = async (req, res) =>{
 }
 
 module.exports.readPost = async (req, res) =>{
+	/** Verification que l'ID est valide */
 	if(!ObjectID.isValid(req.params.id))
         return res.status(400).send('ID post inconnu : ' + req.params.id)
 
-	try {
-		const userFound = await PostModel.findById(req.params.id);
-		res.send(userFound)
+	/**recherche par l'ID d'un post */
+	try { 
+		const postFound = await PostModel.findById(req.params.id);
+		res.send(postFound)
 	} catch (err) {
+		return res.status(500).send('Probleme : ' + req.params.id)
+	}
+}
+
+module.exports.getPostsByUserId = async(req, res) => {
+	
+	if(!ObjectID.isValid(req.params.id))
+        return res.status(400).send('ID utilisateur inconnu : ' + req.params.id)
+
+	/**recupration de tous les posts d'un user, utile pour afficher sur sa page de profil */
+	try{
+		const postsFound = await PostModel.find({posterId : req.params.id})
+
+		res.send(postsFound)
+	}catch(err){
 		return res.status(500).send('Probleme : ' + req.params.id)
 	}
 }
@@ -31,11 +49,13 @@ module.exports.createPost = async (req, res) =>{
 	if(!ObjectID.isValid(req.body.posterId))
 		return res.status(400).send('ID inconnu : ' + req.body.posterId);
 
+	/**Création d'un nouveau post avec comme info obligatoires : l'ID du posteur et le texte */
 	const newPost = new PostModel({
 		posterId : req.body.posterId,
 		text : req.body.text,
 		likers : [],
 		comment: [],
+		picture: req?.body?.picture
 	});
 
 	try{
@@ -48,10 +68,12 @@ module.exports.createPost = async (req, res) =>{
 }
 
 module.exports.updatePost = async (req, res) =>{
-	/** Verification de l'existence de l'ID */
+	
 	if(!ObjectID.isValid(req.params.id))
 		return res.status(400).send('ID inconnu : ' + req.params.id);
 
+
+	/**modification du texte d'un post */
 	const updatetexte = {
 		text : req.body.text,
 	}
@@ -76,10 +98,12 @@ module.exports.updatePost = async (req, res) =>{
 }
 
 module.exports.deletePost = async (req, res) =>{
-	/** Verification de l'existence de l'ID */
+
 	if(!ObjectID.isValid(req.params.id))
 		return res.status(400).send('ID inconnu : ' + req.params.id);
 
+
+	/**suppression d'un post par son ID */
 	try{
 		await PostModel.findByIdAndDelete(req.params.id);
 
@@ -93,15 +117,15 @@ module.exports.deletePost = async (req, res) =>{
 }
 
 module.exports.likePost = async (req, res) =>{
-	/** Verification de l'existence de l'ID */
+	
 	if(!ObjectID.isValid(req.params.id))
 		return res.status(400).send('ID post inconnu : ' + req.params.id);
 	if(!ObjectID.isValid(req.body.id))
 		return res.status(400).send('ID User inconnu : ' + req.body.id);
 	
-		
+	/**Permet d'ajouter un like sur un post */
 	try{
-		await PostModel.findByIdAndUpdate(
+		await PostModel.findByIdAndUpdate( /**on rajoute d'abord à la liste des likers du post */
 			req.params.id,
 			{
 				$addToSet: {likers : req.body.id }
@@ -114,7 +138,7 @@ module.exports.likePost = async (req, res) =>{
 	}
 	try
 	{
-		await UserModel.findByIdAndUpdate(
+		await UserModel.findByIdAndUpdate( /**Puis on rajoute ensuite à la liste des likes du user */
 			req.body.id,
 			{
 				$addToSet: {likes : req.params.id}
@@ -131,12 +155,14 @@ module.exports.likePost = async (req, res) =>{
 }
 
 module.exports.unlikePost = async (req, res) =>{
-	/** Verification de l'existence de l'ID */
+	
 	if(!ObjectID.isValid(req.params.id))
 		return res.status(400).send('ID post inconnu : ' + req.params.id);
 	if(!ObjectID.isValid(req.body.id))
 		return res.status(400).send('ID User inconnu : ' + req.body.id);
+ 
 
+	/**Similaire à like post sauf qu'on utilise pull pour retirer à la liste des likers du post et à la liste des likes du user */
 	try{
 		await PostModel.findByIdAndUpdate(
 			req.params.id,
@@ -175,6 +201,7 @@ module.exports.postCom = async (req,res) =>{
 		return res.status(400).send('ID User inconnu : ' + req.body.posterId);
 
 	try{
+		/**Permet de poster un commentaire pour posterId au post req.params.id en y passant du texte dans le body */
 		const newCom = await PostModel.findByIdAndUpdate(
 			req.params.id,
 			{

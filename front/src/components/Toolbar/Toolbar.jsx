@@ -3,6 +3,7 @@ import {NavLink} from 'react-router-dom'
 import './Toolbar.scss'
 import Panel from 'components/Panel/Panel'
 import useAuth from 'hooks/useAuth'
+import logo from 'assets/images/logo.png'
 
 const Toolbar = () => {
 
@@ -10,6 +11,7 @@ const Toolbar = () => {
 
   return (
     <Panel className='toolbar-container'>
+      <img height='350' src={logo} />
       <NavLink
         to='/home'
         className={({isActive}) => 'navlink' + (isActive ? ' here' : '')}

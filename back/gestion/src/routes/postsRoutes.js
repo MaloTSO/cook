@@ -3,6 +3,7 @@ const postController = require('../controllers/postsControll');
 
 routerStart.get('/', postController.readAllPosts);
 routerStart.get('/:id', postController.readPost);
+routerStart.get('/ByUser/:id', postController.getPostsByUserId)
 routerStart.post('/', postController.createPost);
 routerStart.put('/:id', postController.updatePost);
 routerStart.delete('/:id', postController.deletePost);

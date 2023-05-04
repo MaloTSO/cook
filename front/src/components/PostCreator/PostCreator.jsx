@@ -3,7 +3,9 @@ import {useNavigate} from 'react-router-dom'
 
 import './PostCreator.scss'
 import Panel from 'components/Panel/Panel'
+import Image from 'components/Image/Image'
 import TextField from 'components/TextField/TextField'
+import Spinner from 'components/Spinner/Spinner'
 import Button from 'components/Button/Button'
 import useAxios from 'hooks/useAxios'
 import postPost from 'API/postPost'
@@ -14,27 +16,46 @@ const PostCreator = () => {
   const navigate = useNavigate()
 
   const [content, setContent] = useState('')
+  const [file, setFile] = useState()
 
   const {userId} = useAuth()
 
-  const {data, call} = useAxios(
+  const {loading, data, call} = useAxios(
     postPost.method,
     postPost.url,
-    {posterId: userId, text: content}
+    {posterId: userId, text: content, picture: file}
   )
 
   useEffect(() => {if (data) {navigate('/home')}}, [data])
+
+  const handleFiles = (e) => {
+    let file = e.target.files[0]
+    let reader = new FileReader()
+
+    reader.onloadend = () => {setFile(reader.result)}
+    reader.readAsDataURL(file)
+  }
 
   return (
     <Panel className='post-creator-container'>
       <TextField
         noStyle
         isMultiple
-        label='ça raconte quoi de beau ?'
+        label='Que veux-tu nous partager de bon ?'
         value={content}
         setter={setContent}
       />
-      <Button label='Envoyer' onClick={call} />
+      {
+        loading
+        ?
+        <Spinner />
+        :
+        <>
+          <input onChange={handleFiles} type='file' />
+          {file && <Image src={file} />}
+          <Button label='Envoyer' onClick={call} />
+        </>
+      }
     </Panel>
   )
 }

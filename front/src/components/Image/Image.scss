@@ -1,0 +1,7 @@
+@use 'styles/ui' as ui;
+
+#image-container {
+  height: 200px;
+  width: auto;
+  border-radius: ui.$radius;
+}

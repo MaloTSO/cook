@@ -1,5 +1,5 @@
 import {useNavigate} from 'react-router-dom'
-import {useEffect} from 'react'
+import {useEffect, useState} from 'react'
 
 import './Post.scss'
 import commentSvg from 'assets/icons/comment.svg'
@@ -8,6 +8,8 @@ import fullLikeSvg from 'assets/icons/fullLike.svg'
 import Panel from 'components/Panel/Panel'
 import Icon from 'components/Icon/Icon'
 import Separator from 'components/Separator/Separator'
+import Spinner from 'components/Spinner/Spinner'
+import Image from 'components/Image/Image'
 import useAuth from 'hooks/useAuth'
 import useAxios from 'hooks/useAxios'
 import getUserByPosterId from 'API/getUserByPosterId'
@@ -21,7 +23,9 @@ const Post = ({data, isComment, isMain}) => {
 
   const isLiked = data?.likers?.includes(userId)
 
-  const {loading: getUserLoading, data: user, call: getUserCall} = useAxios(
+  const [localLiked, setLocalLiked] = useState(isLiked)
+
+  const {loading, data: user, call: getUserCall} = useAxios(
     getUserByPosterId.method,
     getUserByPosterId.url + data.posterId
   )
@@ -33,6 +37,11 @@ const Post = ({data, isComment, isMain}) => {
   )
 
   useEffect(() => {getUserCall()}, [])
+
+  const handleHeartCliked = () => {
+    setLocalLiked((old) => !old)
+    likeUnlikeCall()
+  }
 
   const parseDate = (date) => {
     let day = date.split('T')[0].split('-').reverse().join('-').replaceAll('-', '/')
@@ -47,39 +56,61 @@ const Post = ({data, isComment, isMain}) => {
 
   return (
     <Panel noShadows className='post-container'>
-      <div id='post-top'>
-        <span
-          id='post-author'
-          onClick={handleGoToProfile}
-        >
-          {user?.pseudo}
-        </span>
-        <span id='post-message'>{data?.text}</span>
-      </div>
-      <Separator />
-      <div id='post-bottom'>
-        <span id='post-date'>{parseDate(data?.date)}</span>
-        {
-          !isComment &&
-          <div id='post-parts'>
-            <div className='bottom-part'>
-              <Icon
-                disabled={!userId}
-                src={isLiked ? fullLikeSvg : likeSvg}
-                onClick={likeUnlikeCall}
-              />
-              <span>{data?.likers?.length}</span>
-            </div>
+      {
+        loading
+        ?
+        <Spinner />
+        :
+        <>
+          <div id='post-top'>
+            <span
+              id='post-author'
+              onClick={handleGoToProfile}
+            >
+              {user?.pseudo}
+            </span>
+            <span id='post-message'>{data?.text}</span>
             {
-              !isMain &&
-              <div className='bottom-part'>
-                <Icon src={commentSvg} onClick={handleClickComment} />
-                <span>{data?.comment?.length}</span>
+              data?.picture &&
+              <div style={{
+                width: '100%',
+                display: 'flex',
+                justifyContent: 'center'
+              }}>
+                <Image src={data?.picture} />
               </div>
             }
           </div>
-        }
-      </div>
+          <Separator />
+          <div id='post-bottom'>
+            <span id='post-date'>{parseDate(data?.date)}</span>
+            {
+              !isComment &&
+              <div id='post-parts'>
+                <div className='bottom-part'>
+                  <Icon
+                    disabled={!userId}
+                    src={localLiked ? fullLikeSvg : likeSvg}
+                    onClick={handleHeartCliked}
+                  />
+                  <span>{
+                    data?.likers?.length +
+                    ((!isLiked && localLiked) ? 1 : 0) +
+                    ((isLiked && !localLiked) ? -1 : 0)
+                  }</span>
+                </div>
+                {
+                  !isMain &&
+                  <div className='bottom-part'>
+                    <Icon src={commentSvg} onClick={handleClickComment} />
+                    <span>{data?.comment?.length}</span>
+                  </div>
+                }
+              </div>
+            }
+          </div>
+        </>
+      }
     </Panel>
   )
 }

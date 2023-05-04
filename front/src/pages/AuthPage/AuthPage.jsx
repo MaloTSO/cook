@@ -4,6 +4,7 @@ import {useNavigate} from 'react-router-dom'
 import useAuth from 'hooks/useAuth'
 import TextField from 'components/TextField/TextField'
 import Button from 'components/Button/Button'
+import Spinner from 'components/Spinner/Spinner'
 import Panel from 'components/Panel/Panel'
 import './AuthPage.scss'
 import postLogin from 'API/postLogin'
@@ -64,23 +65,31 @@ const AuthPage = () => {
           isSecure
         />
         <span id='error-text'>{displayedError}</span>
-        <Button
-          label={isLogin ? 'Pas de compte ?' : 'Déjà un compte ?'}
-          // inverse la boolean 'isLogin'
-          onClick={() => setIsLogin((old) => !old)}
-        />
-        <Button
-          // désactivé si les champs sont vides
-          disabled={
-            (!isLogin && pseudo === '') ||
-            email === '' ||
-            password === ''
-          }
-          // change le label si le mec se login ou register
-          label={isLogin ? 'Connexion' : 'Inscription'}
-          onClick={loginCall}
-        />
-        <Button label='Ne pas se connecter' onClick={() => navigate('/home')} />
+        {
+          loading
+          ?
+          <Spinner />
+          :
+          <>
+            <Button
+              label={isLogin ? 'Pas de compte ?' : 'Déjà un compte ?'}
+              // inverse la boolean 'isLogin'
+              onClick={() => setIsLogin((old) => !old)}
+            />
+            <Button
+              // désactivé si les champs sont vides
+              disabled={
+                (!isLogin && pseudo === '') ||
+                email === '' ||
+                password === ''
+              }
+              // change le label si le mec se login ou register
+              label={isLogin ? 'Connexion' : 'Inscription'}
+              onClick={loginCall}
+            />
+            <Button label='Ne pas se connecter' onClick={() => navigate('/home')} />
+          </>
+        }
       </Panel>
     </div>
   )

@@ -1,6 +1,8 @@
 import {useEffect, useState} from 'react'
-import {useParams} from 'react-router-dom'
+import {useParams, useLocation} from 'react-router-dom'
 
+import unfollow from 'API/unfollow'
+import follow from 'API/follow'
 import './ProfilPanel.scss'
 import Button from 'components/Button/Button'
 import Panel from 'components/Panel/Panel'
@@ -17,6 +19,13 @@ const ProfilPanel = () => {
 
   const {profilId} = useParams()
 
+  const location = useLocation()
+
+  useEffect(() => {
+    userCall()
+    postsCall()
+  }, [location])
+
   const isSelf = userId === profilId
 
   const [realData, setRealData] = useState()
@@ -26,16 +35,44 @@ const ProfilPanel = () => {
     getUserByPosterId.url + profilId
   )
 
+  const {data: selfUser, call: selfUserCall} = useAxios(
+    getUserByPosterId.method,
+    getUserByPosterId.url + userId
+  )
+
+  const {data: unfollowRes, call: unfollowCall} = useAxios(
+    unfollow.method,
+    unfollow.url + userId,
+    {idToUnFollow: profilId}
+  )
+
+  const {data: followRes, call: followCall} = useAxios(
+    follow.method,
+    follow.url + userId,
+    {idToFollow: profilId}
+  )
+
   const {loading: postsLoading, data: posts, call: postsCall} = useAxios(
     getPostsByUser.method,
     getPostsByUser.url + profilId
   )
 
+
   useEffect(() => {if (posts) {setRealData(posts.reverse())}}, [posts])
 
-  useEffect(() => {userCall()}, [])
+  useEffect(() => {
+    if (userId) {selfUserCall()}
+    userCall()
+  }, [userId])
+
+  useEffect(() => {
+    selfUserCall()
+    userCall()
+  }, [unfollowRes, followRes])
 
   useEffect(() => {if (profilId) {postsCall()}}, [user])
+
+  const isFollowed = user?.followers?.includes(selfUser?._id)
 
   return (
     <>
@@ -47,7 +84,13 @@ const ProfilPanel = () => {
           :
           <>
             <span id='pseudo'>{user?.pseudo}</span>
-            <Button disabled={!userId || isSelf} label='Suivre' />
+            <span>{`Abonnés: ${user?.followers?.length}`}</span>
+            <span>{`Abonnements: ${user?.following?.length}`}</span>
+            <Button
+              disabled={!userId || isSelf}
+              label={isFollowed ? 'Ne plus suivre' : 'Suivre'}
+              onClick={isFollowed ? unfollowCall : followCall}
+            />
           </>
         }
       </Panel>

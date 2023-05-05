@@ -1,6 +1,7 @@
 import {useState, useEffect} from 'react'
 import {useNavigate} from 'react-router-dom'
 
+import addComment from 'API/addComment'
 import './PostCreator.scss'
 import Panel from 'components/Panel/Panel'
 import Image from 'components/Image/Image'
@@ -11,7 +12,7 @@ import useAxios from 'hooks/useAxios'
 import postPost from 'API/postPost'
 import useAuth from 'hooks/useAuth'
 
-const PostCreator = () => {
+const PostCreator = ({postId, refreshCall}) => {
 
   const navigate = useNavigate()
 
@@ -26,6 +27,19 @@ const PostCreator = () => {
     {posterId: userId, text: content, picture: file}
   )
 
+  const {loading: commentLoading, data: commentData, call: addCommentCall} = useAxios(
+    addComment.method,
+    addComment.url + postId,
+    {posterId: userId, text: content}
+  )
+
+  useEffect(() => {
+    if (commentData) {
+      refreshCall()
+      setContent('')
+    }
+  }, [commentData])
+
   useEffect(() => {if (data) {navigate('/home')}}, [data])
 
   const handleFiles = (e) => {
@@ -37,7 +51,7 @@ const PostCreator = () => {
   }
 
   return (
-    <Panel className='post-creator-container'>
+    <Panel className={'post-creator-container' + (postId ? ' comment' : '')}>
       <TextField
         noStyle
         isMultiple
@@ -51,9 +65,9 @@ const PostCreator = () => {
         <Spinner />
         :
         <>
-          <input onChange={handleFiles} type='file' />
+          {!postId && <input onChange={handleFiles} type='file' />}
           {file && <Image src={file} />}
-          <Button label='Envoyer' onClick={call} />
+          <Button label='Envoyer' onClick={postId ? addCommentCall : call} />
         </>
       }
     </Panel>

@@ -13,7 +13,7 @@ const HomePage = () => {
     getPosts.url
   )
 
-  useEffect(() => {call()}, [])
+  useEffect(call, [])
 
   return (
     <div id='home-page-container'>
@@ -22,7 +22,9 @@ const HomePage = () => {
         ?
         <Spinner size='large' />
         :
-        posts?.reverse()?.map((post, i) => (<Post key={i} data={post} />))
+        posts?.reverse()?.map((post, i) => (
+          <Post refreshCall={call} key={i} data={post} />
+        ))
       }
     </div>
   )

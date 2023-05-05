@@ -2,26 +2,31 @@ import {useNavigate} from 'react-router-dom'
 import {useEffect, useState} from 'react'
 
 import './Post.scss'
+import deletePost from 'API/deletePost'
+import deleteComment from 'API/deleteComment'
+import useAxios from 'hooks/useAxios'
 import commentSvg from 'assets/icons/comment.svg'
 import likeSvg from 'assets/icons/like.svg'
 import fullLikeSvg from 'assets/icons/fullLike.svg'
+import deleteSvg from 'assets/icons/delete.svg'
 import Panel from 'components/Panel/Panel'
 import Icon from 'components/Icon/Icon'
 import Separator from 'components/Separator/Separator'
 import Spinner from 'components/Spinner/Spinner'
 import Image from 'components/Image/Image'
 import useAuth from 'hooks/useAuth'
-import useAxios from 'hooks/useAxios'
 import getUserByPosterId from 'API/getUserByPosterId'
 import patchLikeUnlike from 'API/patchLikeUnlike'
 
-const Post = ({data, isComment, isMain}) => {
+const Post = ({data, isComment, postId, isMain, refreshCall}) => {
 
   const {userId} = useAuth()
 
   const navigate = useNavigate()
 
   const isLiked = data?.likers?.includes(userId)
+
+  const isSelf = userId === data?.posterId
 
   const [localLiked, setLocalLiked] = useState(isLiked)
 
@@ -36,7 +41,22 @@ const Post = ({data, isComment, isMain}) => {
     {id: userId}
   )
 
-  useEffect(() => {getUserCall()}, [])
+  const {data: deleteComRes, call: deleteComCall} = useAxios(
+    deleteComment.method,
+    deleteComment.url + postId,
+    {ComID: data?._id}
+  )
+
+  const {data: deletePostRes, call: deletePostCall} = useAxios(
+    deletePost.method,
+    deletePost.url + data?._id
+  )
+
+  useEffect(getUserCall, [])
+
+  useEffect(() => {if (deleteComRes) {refreshCall()}}, [deleteComRes])
+
+  useEffect(() => {if (deletePostRes) {refreshCall()}}, [deletePostRes])
 
   const handleHeartCliked = () => {
     setLocalLiked((old) => !old)
@@ -44,10 +64,7 @@ const Post = ({data, isComment, isMain}) => {
   }
 
   const parseDate = (date) => {
-    let day = date.split('T')[0].split('-').reverse().join('-').replaceAll('-', '/')
-    let time = date.split('T')[1].substring(0, 5)
-
-    return `${time} - ${day}`
+    return date.split('T')[0].split('-').reverse().join('-').replaceAll('-', '/')
   }
 
   const handleClickComment = () => {navigate('/post/' + data?._id, {replace: true})}
@@ -106,7 +123,15 @@ const Post = ({data, isComment, isMain}) => {
                     <span>{data?.comment?.length}</span>
                   </div>
                 }
+                {
+                  isSelf &&
+                  <Icon src={deleteSvg} onClick={deletePostCall} />
+                }
               </div>
+            }
+            {
+              isComment && isSelf &&
+              <Icon src={deleteSvg} onClick={deleteComCall} />
             }
           </div>
         </>

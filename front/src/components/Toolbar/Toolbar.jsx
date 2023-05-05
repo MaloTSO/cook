@@ -33,6 +33,12 @@ const Toolbar = () => {
           >
             Poster
           </NavLink>
+          <NavLink
+            to='/followed'
+            className={({isActive}) => 'navlink' + (isActive ? ' here' : '')}
+          >
+            Pour moi
+          </NavLink>
         </>
       }
       <NavLink

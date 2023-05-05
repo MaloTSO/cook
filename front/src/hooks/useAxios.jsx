@@ -14,7 +14,7 @@ const useAxios = (method, url, body) => {
     setIsLoading(true)
 
     axios
-      [method](url, body)
+      [method](url, method === 'delete' ? {data: body} : body)
       .then((res) => {setData(res?.data)})
       .catch((err) => {setError(err?.response?.data?.errors)})
       .finally(() => {setIsLoading(false)})

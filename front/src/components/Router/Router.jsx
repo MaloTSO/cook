@@ -5,6 +5,7 @@ import AuthPage from 'pages/AuthPage/AuthPage'
 import HomePage from 'pages/HomePage/HomePage'
 import MainPage from 'pages/MainPage/MainPage'
 import ProfilPage from 'pages/ProfilPage/ProfilPage'
+import FollowedPage from 'pages/FollowedPage/FollowedPage'
 import PostPage from 'pages/PostPage/PostPage'
 import CreatePostPage from 'pages/CreatePostPage/CreatePostPage'
 import './Router.scss'
@@ -27,6 +28,7 @@ const Router = () => {
               <Route path='/home' element={<HomePage />} />
               <Route path='/profil/:profilId' element={<ProfilPage />} />
               <Route path='/create' element={<CreatePostPage />} />
+              <Route path='/followed' element={<FollowedPage />} />
             </Route>
             <Route path='*' element={<Navigate replace to='/auth' />} />
           </Routes>
